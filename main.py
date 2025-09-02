@@ -1,7 +1,7 @@
 import pygame
 import sys
 from const import *
-
+import random
 
 
 
@@ -11,6 +11,35 @@ def main() :
     surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
     fps = pygame.time.Clock()
+
+
+
+    # mine_field = [
+    #     [None, None, None, None, None, None, None, None, None, ],
+    #     [None, None, None, None, None, None, None, None, None, ],
+    #     [None, FIELD_MINE, None, None, None, None, FIELD_MINE, None, None, ],
+    #     [None, None, None, None, None, None, None, None, None, ],
+    #     [None, None, None, None, None, FIELD_MINE, None, None, None, ],
+    #     [None, None, None, None, None, None, None, None, None, ],
+    #     [None, None, None, None, FIELD_MINE, None, None, None, None, ],
+    #     [None, None, FIELD_MINE, None, None, None, None, None, None, ],
+    #     [None, None, None, None, None, None, None, None, None, ],
+    # ]
+
+    mine_field = [
+        [None for _ in range(9)] for _ in range(9)
+    ]
+
+    max_mine_count = 10
+
+    mine_count = 0
+
+    while mine_count < max_mine_count :
+        x = random.randrange(0, 9)
+        y = random.randrange(0, 9)
+        if mine_field[y][x] is None :
+            mine_field[y][x] = FIELD_MINE
+            mine_count += 1
 
     running = True
 
@@ -31,6 +60,9 @@ def main() :
             for x in range(9) :
                 rect = (start_x + x * size, start_y + y * size, size + 1, size + 1)
                 pygame.draw.rect(surface, WHITE, rect, 1)
+                value = mine_field[y][x]
+                if value == FIELD_MINE :
+                    pygame.draw.rect(surface, WHITE, rect, 10)
 
         pygame.display.flip()
 
