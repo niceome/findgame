@@ -3,6 +3,18 @@ import sys
 from const import *
 import random
 
+def calculate_mine_count(mine_field, x, y) :
+    result = 0
+
+    for y_delta in [-1, 0, 1] :
+        for x_delta in [-1, 0, 1] :
+            try :
+                value = mine_field[y + y_delta][x + x_delta]
+                if value == FIELD_MINE:
+                    result += 1
+            except IndexError :
+                pass
+    return result
 
 
 def main() :
@@ -41,6 +53,12 @@ def main() :
             mine_field[y][x] = FIELD_MINE
             mine_count += 1
 
+    for y in range(9) :
+        for x in range(9) :
+            if mine_field[y][x] is None :
+                mine_count = calculate_mine_count(mine_field, x, y)
+                mine_field[y][x] = mine_count
+
     running = True
 
     while running :
@@ -63,6 +81,8 @@ def main() :
                 value = mine_field[y][x]
                 if value == FIELD_MINE :
                     pygame.draw.rect(surface, WHITE, rect, 10)
+                else :
+                    pygame.draw.rect(surface, (255, 255, 0), rect, value)
 
         pygame.display.flip()
 
